@@ -1,0 +1,27 @@
+# Arquivos binários e de compilação
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+
+# Arquivos temporários
+*.user
+*.suo
+.vscode/
+
+# Arquivos de dependência e pacotes
+packages/
+node_modules/
+*.lock
+*.log
+
+# Arquivos de configuração local
+Configuration.json
+*.env
+
+# Arquivos de cache
+.vs/
+*.sln.cache
+*.csproj.user
+launchSettings.json
