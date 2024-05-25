@@ -15,13 +15,11 @@ namespace StockAlert.Services.Stock
     internal class StockService : IStockService
     {
         private readonly IConfiguration _configuration;
-        private readonly ILogger<StockService> _logger;
         private readonly HttpClient _httpClient;
 
-        public StockService(IConfiguration configuration, ILogger<StockService> logger)
+        public StockService(IConfiguration configuration)
         {
             _configuration = configuration;
-            _logger = logger;
             _httpClient = new HttpClient();
         }
 
@@ -43,7 +41,6 @@ namespace StockAlert.Services.Stock
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao obter cotação do ativo.");
                 throw;
             }
         }

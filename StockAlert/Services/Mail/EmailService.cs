@@ -1,11 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using StockAlert.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.Mail;
+using System.Net;
 
 namespace StockAlert.Services.Mail
 {
@@ -18,10 +14,32 @@ namespace StockAlert.Services.Mail
             _configuration = configuration;
         }
 
-        public Task SendEmail(string subject, string body)
+        public async Task SendEmail(string subject, string body)
         {
-            Console.WriteLine("Email Mock Enviado", subject, body);
-            return Task.CompletedTask;
+            var emailSettings = _configuration.GetSection("EmailSettings");
+            
+            //Criar uma verificaçação para ver se os dados de configuração estão válidos
+
+            using (var client = new SmtpClient(emailSettings["SmtpServer"], int.Parse(emailSettings["Port"]))
+            {
+                Credentials = new NetworkCredential(emailSettings["SenderEmail"], emailSettings["SenderPassword"]),
+                EnableSsl = true
+            })
+            using (var message = new MailMessage(emailSettings["SenderEmail"], emailSettings["ReceiverEmail"])
+            {
+                Subject = subject,
+                Body = body
+            })
+            {
+                try
+                {
+                    await client.SendMailAsync(message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+            }
         }
     }
 }

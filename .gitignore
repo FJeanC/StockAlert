@@ -18,6 +18,7 @@ node_modules/
 
 # Arquivos de configuração local
 Configuration.json
+Configuracao.json
 *.env
 
 # Arquivos de cache

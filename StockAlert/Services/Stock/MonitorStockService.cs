@@ -7,21 +7,17 @@ namespace StockAlert.Services.Stock
     {
         private readonly IStockService _stockService;
         private readonly IEmailService _emailService;
-        private readonly ILogger<MonitorStockService> _logger;
-        private static readonly System.Timers.Timer _timer = new System.Timers.Timer(30000);
+        private static readonly System.Timers.Timer _timer = new(60000);
 
-        public MonitorStockService(IStockService stockService, ILogger<MonitorStockService> logger, IEmailService emailService)
+        public MonitorStockService(IStockService stockService, IEmailService emailService)
         {
             _stockService = stockService;
             _emailService = emailService;
-            _logger = logger;
         }
         public async Task MonitorStock(string symbol, decimal sellPrice, decimal buyPrice)
         {
             _timer.Elapsed += async (sender, e) => await CheckStockPrice(symbol, sellPrice, buyPrice);
             _timer.Start();
-
-            _logger.LogInformation("Monitoramento iniciado para o ativo {symbol}", symbol);
 
             await CheckStockPrice(symbol, sellPrice, buyPrice);
         }
@@ -42,7 +38,7 @@ namespace StockAlert.Services.Stock
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao monitorar o ativo {symbol}", symbol);
+                Console.WriteLine("Erro: ", ex.ToString());
             }
         }
     }

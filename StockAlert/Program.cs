@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Serilog;
 using StockAlert.Configuration;
 using StockAlert.Contracts;
 using StockAlert.Services.Mail;
@@ -20,7 +19,7 @@ class Program
         }
 
         string ativo = args[0];
-         if (!decimal.TryParse(args[1].Trim().Replace('.', ','), out decimal precoVenda) ||
+        if (!decimal.TryParse(args[1].Trim().Replace('.', ','), out decimal precoVenda) ||
             !decimal.TryParse(args[2].Trim().Replace('.', ','), out decimal precoCompra))
         {
             Console.WriteLine("Os preços devem ser valores decimais.");
@@ -31,7 +30,6 @@ class Program
         var services = ConfigureServices();
         var serviceProvider = services.BuildServiceProvider();
 
-        var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
 
         var monitor = serviceProvider.GetRequiredService<IStockMonitor>();
         await monitor.MonitorStock(ativo, precoVenda, precoCompra);
@@ -46,13 +44,6 @@ class Program
 
         IConfiguration configuration = Configuration.LoadConfiguration();
         services.AddSingleton(configuration);
-
-        Log.Logger = new LoggerConfiguration()
-            .ReadFrom.Configuration(configuration)
-            .CreateLogger();
-
-        services.AddLogging(loggingBuilder =>
-            loggingBuilder.AddSerilog(dispose: true));
 
         services.AddSingleton<IEmailService, EmailService>();
         services.AddSingleton<IStockService, StockService>();
