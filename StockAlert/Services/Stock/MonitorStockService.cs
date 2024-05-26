@@ -10,11 +10,13 @@ namespace StockAlert.Services.Stock
         private readonly IEmailService _emailService;
         private const int OneMinuteInMilliseconds = 60000;
         private static readonly System.Timers.Timer _timer = new(OneMinuteInMilliseconds);
+        private readonly Dictionary<string, decimal> _lastQuotes;
 
         public MonitorStockService(IStockService stockService, IEmailService emailService)
         {
             _stockService = stockService;
             _emailService = emailService;
+            _lastQuotes = new Dictionary<string, decimal>();
         }
         public async Task MonitorStock(StockDataDTO stockData)
         {
@@ -35,6 +37,13 @@ namespace StockAlert.Services.Stock
                     Console.WriteLine("Encerrando o programa");
                     Environment.Exit(1);
                 }
+
+                if (_lastQuotes.ContainsKey(stockData.Symbol) && _lastQuotes[stockData.Symbol] == quote)
+                {
+                    Console.WriteLine($"A cotação do ativo {stockData.Symbol} não mudou. Nenhum e-mail enviado.");
+                    return;
+                }
+                _lastQuotes[stockData.Symbol] = quote;
 
                 if (quote <= stockData.BuyPrice)
                 {
