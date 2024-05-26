@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using System.Reflection;
 
 namespace StockAlert.Configuration
 {
@@ -7,7 +8,7 @@ namespace StockAlert.Configuration
         public static IConfigurationRoot LoadConfiguration()
         {
             var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
+                .SetBasePath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!)
                 .AddJsonFile("Configuracao.json", optional: false, reloadOnChange: true);
 
             return builder.Build();

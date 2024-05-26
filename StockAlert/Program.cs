@@ -16,13 +16,13 @@ class Program
     {
         if (args.Length != 3)
         {
-            Console.WriteLine("O programa requer 3 argumentos. <NOME_DO_ATIVO> <PRECO_VENDA> <PRECO_COMPRA>");
+            Console.WriteLine("O programa requer 3 argumentos: <NOME_DO_ATIVO> <PRECO_VENDA> <PRECO_COMPRA>");
             return;
         }
 
         if (!IsUserArgumentValid(args, out StockDataDTO stockData))
         {
-            Console.WriteLine("Finalizando o programa. Digite valores válidos como argumento do progama");
+            Console.WriteLine("Finalizando o programa. Digite valores válidos como argumento do progama.");
             return;
         }
         Console.WriteLine("Monitorando o ativo. Pressione [Enter] para sair...");
@@ -65,6 +65,11 @@ class Program
             !decimal.TryParse(args[2].Trim().Replace('.', ','), out decimal precoCompra))
         {
             Console.WriteLine("Os valores de compra e venda devem ser um número decimal válido.");
+            return false;
+        }
+        if (precoVenda <= 0)
+        {
+            Console.WriteLine("O preco de venda deve ser maior que zero.");
             return false;
         }
         if (precoVenda <= precoCompra)

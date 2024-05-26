@@ -1,0 +1,13 @@
+﻿{
+  "EmailSettings": {
+    "SmtpServer": "smtp.office365.com",
+    "Port": 587,
+    "SenderEmail": "email_example@live.com",
+    "SenderPassword": "yourpassword",
+    "ReceiverEmail": "receiverEmail@gmail.com"
+  },
+  "ApiSettings": {
+    "ApiKey": "YOUR_API_KEY",
+    "ApiUrl": "https://brapi.dev/api/quote/"
+  }
+}
