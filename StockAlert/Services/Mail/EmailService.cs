@@ -18,14 +18,17 @@ namespace StockAlert.Services.Mail
         {
             var emailSettings = _configuration.GetSection("EmailSettings");
 
-            //Criar uma verificaçação para ver se os dados de configuração estão válidos
+            if (!IsEmailSettingsValid(emailSettings))
+            {
+                return;
+            }
 
-            using var client = new SmtpClient(emailSettings["SmtpServer"], int.Parse(emailSettings["Port"]))
+            using var client = new SmtpClient(emailSettings["SmtpServer"], int.Parse(emailSettings["Port"]!))
             {
                 Credentials = new NetworkCredential(emailSettings["SenderEmail"], emailSettings["SenderPassword"]),
                 EnableSsl = true
             };
-            using var message = new MailMessage(emailSettings["SenderEmail"], emailSettings["ReceiverEmail"])
+            using var message = new MailMessage(emailSettings["SenderEmail"]!, emailSettings["ReceiverEmail"]!)
             {
                 Subject = subject,
                 Body = body
@@ -39,6 +42,25 @@ namespace StockAlert.Services.Mail
             {
                 Console.WriteLine(ex.ToString());
             }
+        }
+
+        private bool IsEmailSettingsValid(IConfiguration emailSettings)
+        {
+            string smtpServer = emailSettings["SmtpServer"];
+            string portString = emailSettings["Port"];
+            string senderEmail = emailSettings["SenderEmail"];
+            string senderPassword = emailSettings["SenderPassword"];
+            string receiverEmail = emailSettings["ReceiverEmail"];
+
+            if (string.IsNullOrWhiteSpace(smtpServer) || !int.TryParse(portString, out int port) ||
+                string.IsNullOrWhiteSpace(senderEmail) || string.IsNullOrWhiteSpace(senderPassword) ||
+                string.IsNullOrWhiteSpace(receiverEmail))
+            {
+                Console.WriteLine("Configuração de e-mail inválida.Verifique o arquivo Configuracao.json e tente novamente.");
+                return false;
+            }
+
+            return true;
         }
     }
 }

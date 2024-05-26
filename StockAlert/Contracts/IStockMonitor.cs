@@ -1,7 +1,9 @@
-﻿namespace StockAlert.Contracts
+﻿using StockAlert.DTO;
+
+namespace StockAlert.Contracts
 {
     internal interface IStockMonitor
     {
-        Task MonitorStock(string symbol, decimal sellPrice, decimal buyPrice);
+        Task MonitorStock(StockDataDTO stockData);
     }
 }

@@ -8,6 +8,7 @@ using StockAlert.Configuration;
 using StockAlert.Contracts;
 using StockAlert.Services.Mail;
 using StockAlert.Services.Stock;
+using StockAlert.DTO;
 
 class Program
 {
@@ -19,7 +20,7 @@ class Program
             return;
         }
 
-        if (!IsUserArgumentValid(args, out string ativo, out decimal precoVenda, out decimal precoCompra))
+        if (!IsUserArgumentValid(args, out StockDataDTO stockData))
         {
             Console.WriteLine("Finalizando o programa. Digite valores válidos como argumento do progama");
             return;
@@ -31,7 +32,7 @@ class Program
 
 
         var monitor = serviceProvider.GetRequiredService<IStockMonitor>();
-        await monitor.MonitorStock(ativo, precoVenda, precoCompra);
+        await monitor.MonitorStock(stockData);
 
         Console.ReadLine();
     }
@@ -50,20 +51,18 @@ class Program
         return services;
     }
 
-    private static bool IsUserArgumentValid(string[] args, out string ativo, out decimal precoVenda, out decimal precoCompra)
+    private static bool IsUserArgumentValid(string[] args, out StockDataDTO request)
     {
-        precoVenda = 0;
-        precoCompra = 0;
-        ativo = args[0].Trim();
-
+        request = new StockDataDTO();
+        string ativo = args[0].Trim();
         if (string.IsNullOrWhiteSpace(ativo))
         {
             Console.WriteLine("O nome do ativo não pode ser vazio");
             return false;
         }
 
-        if (!decimal.TryParse(args[1].Trim().Replace('.', ','), out precoVenda) ||
-            !decimal.TryParse(args[2].Trim().Replace('.', ','), out precoCompra))
+        if (!decimal.TryParse(args[1].Trim().Replace('.', ','), out decimal precoVenda) ||
+            !decimal.TryParse(args[2].Trim().Replace('.', ','), out decimal precoCompra))
         {
             Console.WriteLine("Os valores de compra e venda devem ser um número decimal válido.");
             return false;
@@ -73,7 +72,9 @@ class Program
             Console.WriteLine("O preco de compra não deve ser menor que o preço de venda.");
             return false;
         }
-
+        request.Symbol = ativo;
+        request.SellPrice = precoVenda;
+        request.BuyPrice = precoCompra;
         return true;
     }
 }

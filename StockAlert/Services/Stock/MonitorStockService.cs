@@ -1,4 +1,5 @@
 ﻿using StockAlert.Contracts;
+using StockAlert.DTO;
 using static StockAlert.Constants.StockConstant;
 
 namespace StockAlert.Services.Stock
@@ -15,28 +16,28 @@ namespace StockAlert.Services.Stock
             _stockService = stockService;
             _emailService = emailService;
         }
-        public async Task MonitorStock(string symbol, decimal sellPrice, decimal buyPrice)
+        public async Task MonitorStock(StockDataDTO stockData)
         {
-            _timer.Elapsed += async (sender, e) => await CheckStockPrice(symbol, sellPrice, buyPrice);
+            _timer.Elapsed += async (sender, e) => await CheckStockPrice(stockData);
             _timer.Start();
 
-            await CheckStockPrice(symbol, sellPrice, buyPrice);
+            await CheckStockPrice(stockData);
         }
-        private async Task CheckStockPrice(string symbol, decimal sellPrice, decimal buyPrice)
+        private async Task CheckStockPrice(StockDataDTO stockData)
         {
             try
             {
-                var quote = await _stockService.GetStockQuote(symbol);
+                var quote = await _stockService.GetStockQuote(stockData.Symbol);
 
                 if (quote != InvalidStockQuote)
                 {
-                    if (quote <= buyPrice)
+                    if (quote <= stockData.BuyPrice)
                     {
-                        await _emailService.SendEmail("Alerta de Compra", $"O ativo {symbol} atingiu o preço de compra: {quote}");
+                        await _emailService.SendEmail("Alerta de Compra", $"O ativo {stockData.Symbol} atingiu o preço de compra: {quote}");
                     }
-                    else if (quote >= sellPrice)
+                    else if (quote >= stockData.SellPrice)
                     {
-                        await _emailService.SendEmail("Alerta de Venda", $"O ativo {symbol} atingiu o preço de venda: {quote}");
+                        await _emailService.SendEmail("Alerta de Venda", $"O ativo {stockData.Symbol} atingiu o preço de venda: {quote}");
                     }
                 }
             }
