@@ -29,17 +29,21 @@ namespace StockAlert.Services.Stock
             {
                 decimal quote = await _stockService.GetStockQuote(stockData.Symbol);
 
-                if (quote != InvalidStockQuote)
+                if (quote == InvalidStockQuote)
                 {
-                    if (quote <= stockData.BuyPrice)
-                    {
-                        await _emailService.SendEmail("Alerta de Compra", $"O preço do ativo {stockData.Symbol} está abaixo do valor de compra configurado. Aconselhamos a compra do ativo. Preço atual:  {quote}");
-                    }
-                    else if (quote >= stockData.SellPrice)
-                    {
-                        await _emailService.SendEmail("Alerta de Venda", $"O preço do ativo {stockData.Symbol} está acima do valor de venda configurado. Aconselhamos a venda do ativo. Preço atual:  {quote}");
-                    }
+                    Console.WriteLine($"O ativo {stockData.Symbol} não é válido. Confira a lista de ativos disponíveis no site da brapi.");
+                    Console.WriteLine("Encerrando o programa");
+                    Environment.Exit(1);
                 }
+
+                if (quote <= stockData.BuyPrice)
+                {
+                    await _emailService.SendEmail("Alerta de Compra", $"O preço do ativo {stockData.Symbol} está abaixo do valor de compra configurado. Aconselhamos a compra do ativo. Preço atual:  {quote}");
+                }
+                else if (quote >= stockData.SellPrice)
+                {
+                    await _emailService.SendEmail("Alerta de Venda", $"O preço do ativo {stockData.Symbol} está acima do valor de venda configurado. Aconselhamos a venda do ativo. Preço atual:  {quote}");
+                }    
             }
             catch (Exception ex)
             {
