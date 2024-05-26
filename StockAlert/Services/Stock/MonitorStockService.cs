@@ -29,7 +29,7 @@ namespace StockAlert.Services.Stock
         {
             try
             {
-                decimal quote = await _stockService.GetStockQuote(stockData.Symbol);
+               decimal quote = await _stockService.GetStockQuote(stockData.Symbol);
 
                 if (quote == InvalidStockQuote)
                 {
@@ -47,11 +47,11 @@ namespace StockAlert.Services.Stock
 
                 if (quote <= stockData.BuyPrice)
                 {
-                    await _emailService.SendEmail("Alerta de Compra", $"O preço do ativo {stockData.Symbol} está abaixo do valor de compra configurado. Aconselhamos a compra do ativo. Preço atual:  {quote}");
+                    await _emailService.SendEmail("Alerta de Compra", $"O preço do ativo {stockData.Symbol} está abaixo do valor de compra configurado. Aconselhamos a compra do ativo. Preço atual: {quote}");
                 }
                 else if (quote >= stockData.SellPrice)
                 {
-                    await _emailService.SendEmail("Alerta de Venda", $"O preço do ativo {stockData.Symbol} está acima do valor de venda configurado. Aconselhamos a venda do ativo. Preço atual:  {quote}");
+                    await _emailService.SendEmail("Alerta de Venda", $"O preço do ativo {stockData.Symbol} está acima do valor de venda configurado. Aconselhamos a venda do ativo. Preço atual: {quote}");
                 }    
             }
             catch (Exception ex)

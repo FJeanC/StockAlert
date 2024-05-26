@@ -30,7 +30,6 @@ class Program
         var services = ConfigureServices();
         var serviceProvider = services.BuildServiceProvider();
 
-
         var monitor = serviceProvider.GetRequiredService<IStockMonitor>();
         await monitor.MonitorStock(stockData);
 
