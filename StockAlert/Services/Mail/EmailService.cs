@@ -40,7 +40,7 @@ namespace StockAlert.Services.Mail
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Console.WriteLine("Erro ao enviar o email. Erro: ", ex.ToString());
             }
         }
 
@@ -56,7 +56,7 @@ namespace StockAlert.Services.Mail
                 string.IsNullOrWhiteSpace(senderEmail) || string.IsNullOrWhiteSpace(senderPassword) ||
                 string.IsNullOrWhiteSpace(receiverEmail))
             {
-                Console.WriteLine("Configuração de e-mail inválida.Verifique o arquivo Configuracao.json e tente novamente.");
+                Console.WriteLine("Configuração de e-mail inválida. Verifique o arquivo Configuracao.json e tente novamente.");
                 return false;
             }
 

@@ -57,7 +57,7 @@ class Program
         string ativo = args[0].Trim();
         if (string.IsNullOrWhiteSpace(ativo))
         {
-            Console.WriteLine("O nome do ativo não pode ser vazio");
+            Console.WriteLine("O nome do ativo não pode ser vazio.");
             return false;
         }
 

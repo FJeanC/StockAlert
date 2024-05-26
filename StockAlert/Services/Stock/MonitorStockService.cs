@@ -43,7 +43,7 @@ namespace StockAlert.Services.Stock
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Erro: ", ex.ToString());
+                Console.WriteLine("Erro ao buscar dados na API. Erro: ", ex.ToString());
             }
         }
     }
