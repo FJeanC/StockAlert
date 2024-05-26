@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
-using StockAlert.Contracts;
+﻿using StockAlert.Contracts;
+using static StockAlert.Constants.StockConstant;
 
 namespace StockAlert.Services.Stock
 {
@@ -7,7 +7,8 @@ namespace StockAlert.Services.Stock
     {
         private readonly IStockService _stockService;
         private readonly IEmailService _emailService;
-        private static readonly System.Timers.Timer _timer = new(60000);
+        private const int OneMinuteInMilliseconds = 60000;
+        private static readonly System.Timers.Timer _timer = new(OneMinuteInMilliseconds);
 
         public MonitorStockService(IStockService stockService, IEmailService emailService)
         {
@@ -27,13 +28,16 @@ namespace StockAlert.Services.Stock
             {
                 var quote = await _stockService.GetStockQuote(symbol);
 
-                if (quote <= buyPrice)
+                if (quote != InvalidStockQuote)
                 {
-                    await _emailService.SendEmail("Alerta de Compra", $"O ativo {symbol} atingiu o preço de compra: {quote}");
-                }
-                else if (quote >= sellPrice)
-                {
-                    await _emailService.SendEmail("Alerta de Venda", $"O ativo {symbol} atingiu o preço de venda: {quote}");
+                    if (quote <= buyPrice)
+                    {
+                        await _emailService.SendEmail("Alerta de Compra", $"O ativo {symbol} atingiu o preço de compra: {quote}");
+                    }
+                    else if (quote >= sellPrice)
+                    {
+                        await _emailService.SendEmail("Alerta de Venda", $"O ativo {symbol} atingiu o preço de venda: {quote}");
+                    }
                 }
             }
             catch (Exception ex)

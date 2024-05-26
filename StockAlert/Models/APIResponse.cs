@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace StockAlert.Models
 {
@@ -10,11 +6,13 @@ namespace StockAlert.Models
     {
         public class ApiResponse
         {
-            public List<StockPrice> results { get; set; }
+            [JsonPropertyName("results")]
+            public List<StockPrice> Results { get; set; }
         }
         public class StockPrice
         {
-            public decimal regularMarketPrice { get; set; }
+            [JsonPropertyName("regularMarketPrice")]
+            public decimal RegularMarketPrice { get; set; }
         }
     }
 }
