@@ -46,11 +46,11 @@ namespace StockAlert.Services.Mail
 
         private bool IsEmailSettingsValid(IConfiguration emailSettings)
         {
-            string smtpServer = emailSettings["SmtpServer"];
-            string portString = emailSettings["Port"];
-            string senderEmail = emailSettings["SenderEmail"];
-            string senderPassword = emailSettings["SenderPassword"];
-            string receiverEmail = emailSettings["ReceiverEmail"];
+            string smtpServer = emailSettings["SmtpServer"] ?? string.Empty;
+            string portString = emailSettings["Port"] ?? string.Empty;
+            string senderEmail = emailSettings["SenderEmail"] ?? string.Empty;
+            string senderPassword = emailSettings["SenderPassword"] ?? string.Empty;
+            string receiverEmail = emailSettings["ReceiverEmail"] ?? string.Empty;
 
             if (string.IsNullOrWhiteSpace(smtpServer) || !int.TryParse(portString, out int port) ||
                 string.IsNullOrWhiteSpace(senderEmail) || string.IsNullOrWhiteSpace(senderPassword) ||
